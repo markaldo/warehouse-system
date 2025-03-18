@@ -1,0 +1,75 @@
+-- Users Table
+CREATE TABLE users (
+    id SERIAL PRIMARY KEY,
+    email VARCHAR(255) UNIQUE NOT NULL,
+    password_hash VARCHAR(255) NOT NULL,
+    role VARCHAR(20) CHECK (role IN ('sales', 'logistics', 'admin')),
+    created_at TIMESTAMP DEFAULT NOW()
+);
+
+-- Products Table
+CREATE TABLE products (
+    id SERIAL PRIMARY KEY,
+    sku VARCHAR(50) UNIQUE NOT NULL,
+    name VARCHAR(255) NOT NULL,
+    base_price DECIMAL(10,2) NOT NULL
+);
+
+-- Inventory & Logistics
+CREATE TABLE inventory (
+    id SERIAL PRIMARY KEY,
+    product_id INT REFERENCES products(id),
+    warehouse_location VARCHAR(100),
+    quantity INT NOT NULL CHECK (quantity >= 0),
+    last_restocked TIMESTAMP
+);
+
+CREATE TABLE suppliers (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    contact_email VARCHAR(255),
+    lead_time_days INT
+);
+
+-- Price Modifiers Table
+CREATE TABLE price_modifiers (
+    id SERIAL PRIMARY KEY,
+    product_id INT REFERENCES products(id),
+    discount DECIMAL(5,2) DEFAULT 0,
+    active BOOLEAN DEFAULT true,
+    start_date DATE,
+    end_date DATE
+);
+
+CREATE TABLE orders (
+    id UUID PRIMARY KEY,
+    customer_id INT REFERENCES customers(id),
+    total_amount DECIMAL(10,2),
+    status VARCHAR(50) CHECK (status IN ('pending', 'shipped', 'delivered')),
+    created_at TIMESTAMP DEFAULT NOW()
+);
+
+CREATE TABLE order_items (
+    order_id UUID REFERENCES orders(id),
+    product_id INT REFERENCES products(id),
+    quantity INT,
+    price_at_purchase DECIMAL(10,2)
+);
+
+-- Insert Sample Products
+INSERT INTO products (sku, name, base_price)
+VALUES 
+('SKU001', 'Product A', 10.00),
+('SKU002', 'Product B', 20.00);
+
+-- Insert Sample Inventory
+INSERT INTO inventory (product_id, quantity, low_stock_threshold, last_restocked)
+VALUES 
+(1, 100, 10, CURRENT_DATE),
+(2, 50, 5, CURRENT_DATE);
+
+-- Insert Sample Users
+INSERT INTO users (email, password_hash, role)
+VALUES 
+('sales@test.com', 'hashed_password', 'sales'),
+('logistics@test.com', 'hashed_password', 'logistics');
