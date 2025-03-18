@@ -20,3 +20,6 @@ Install dependencies: npm install
 Generate SSL certificates for HTTPS (see Generating SSL Certificates)
 Start the server: node app.js
 Access the application at https://localhost:3443
+
+![image](https://github.com/user-attachments/assets/705b4fb8-0a99-4c50-a3d2-0ee5e55a6d7e)
+
