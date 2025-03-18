@@ -15,7 +15,7 @@ Frontend: EJS templating engine for dynamic web pages
 Security: Helmet for security headers, CORS for cross-origin requests
 
 Setup Instructions
-Clone the repository: git clone https://github.com/your-repo/warehouse-system.git
+Clone the repository: git clone https://github.com/markaldo/warehouse-system.git
 Install dependencies: npm install
 Generate SSL certificates for HTTPS (see Generating SSL Certificates)
 Start the server: node app.js
